@@ -1,12 +1,32 @@
 # Prepare a rebuttal
 
-Open the root of your submitted LaTeX project in your preferred coding agent. Copy the contents of [PROMPT.md](PROMPT.md) into the agent and give it access to the LaTeX source and a terminal. The workflow uses subagents and may ask for the review source or venue details.
+## Install from the command line
 
-## Set up the files
+From the root of your LaTeX paper project, run the block for your shell. It downloads the prompt and both Python helpers into `./rebuttal/`.
 
-Copy [PROMPT.md](PROMPT.md), [import_reviews.py](import_reviews.py), and [count_rebuttal.py](count_rebuttal.py) from the `rebuttal/` directory of a checkout of [muelphil/research-skills](https://github.com/muelphil/research-skills) into a single `rebuttal/` directory under the LaTeX project root. Use a checkout containing these files. The public repository currently contains only the root README.
+**macOS or Linux**
 
-Run the workflow from the LaTeX project root with Python 3 available as `python`. The scripts use the standard library. Have the OpenReview forum URL or a saved HTML page with all official reviews expanded ready.
+```sh
+mkdir -p rebuttal && (
+  cd rebuttal || exit 1
+  base=https://raw.githubusercontent.com/muelphil/research-skills/main/rebuttal
+  for file in PROMPT.md import_reviews.py count_rebuttal.py; do
+    curl -fsSL "$base/$file" -o "$file" || exit 1
+  done
+)
+```
+
+**Windows PowerShell**
+
+```powershell
+New-Item -ItemType Directory -Force rebuttal | Out-Null
+$base = 'https://raw.githubusercontent.com/muelphil/research-skills/main/rebuttal'
+foreach ($file in 'PROMPT.md', 'import_reviews.py', 'count_rebuttal.py') {
+    Invoke-WebRequest "$base/$file" -OutFile "rebuttal/$file" -ErrorAction Stop
+}
+```
+
+Open the paper project root in your preferred coding agent and paste [PROMPT.md](PROMPT.md) into the session, or use a launch command below. The agent needs terminal access, subagents, and Python 3. Both helpers use the standard library. When prompted, paste your OpenReview forum URL or the path to a saved HTML page with the official reviews expanded.
 
 ## Launch from the command line
 
@@ -40,4 +60,5 @@ Start with `rebuttal/summary.md` for reviewer priorities, draft readiness, and o
 ```sh
 python rebuttal/count_rebuttal.py rebuttal/review-1-reviewer-answer.md --limit 5000
 ```
+
 
